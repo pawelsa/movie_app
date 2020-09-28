@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:movie_app/dependencies/injection.dart';
+import 'package:movie_app/translations/translations.dart';
 
 void main() {
   configureInjection(Env.dev);
-  runApp(MyApp());
+  runApp(PrepareApp());
+}
+
+class PrepareApp extends StatefulWidget {
+  @override
+  _PrepareAppState createState() => _PrepareAppState();
+}
+
+class _PrepareAppState extends State<PrepareApp> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: initDependencies(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MyApp();
+        } else {
+          return Center(
+            child: Container(
+              color: Colors.pink,
+            ),
+          );
+        }
+      },
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -12,6 +39,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      localizationsDelegates: [
+        const TranslationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: const [Locale('pl'), Locale('en')],
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,24 +57,16 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -63,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    strings = Translations.of(context);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -73,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(strings.text('app_name')),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
