@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/dependencies/injection.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  configureInjection(Env.dev);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
