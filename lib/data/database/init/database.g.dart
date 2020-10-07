@@ -6,21 +6,21 @@ part of 'database.dart';
 // FloorGenerator
 // **************************************************************************
 
-class $FloorAppDatabase {
+class $FloorMovieDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$AppDatabaseBuilder databaseBuilder(String name) =>
-      _$AppDatabaseBuilder(name);
+  static _$MovieDatabaseBuilder databaseBuilder(String name) =>
+      _$MovieDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
-      _$AppDatabaseBuilder(null);
+  static _$MovieDatabaseBuilder inMemoryDatabaseBuilder() =>
+      _$MovieDatabaseBuilder(null);
 }
 
-class _$AppDatabaseBuilder {
-  _$AppDatabaseBuilder(this.name);
+class _$MovieDatabaseBuilder {
+  _$MovieDatabaseBuilder(this.name);
 
   final String name;
 
@@ -29,23 +29,23 @@ class _$AppDatabaseBuilder {
   Callback _callback;
 
   /// Adds migrations to the builder.
-  _$AppDatabaseBuilder addMigrations(List<Migration> migrations) {
+  _$MovieDatabaseBuilder addMigrations(List<Migration> migrations) {
     _migrations.addAll(migrations);
     return this;
   }
 
   /// Adds a database [Callback] to the builder.
-  _$AppDatabaseBuilder addCallback(Callback callback) {
+  _$MovieDatabaseBuilder addCallback(Callback callback) {
     _callback = callback;
     return this;
   }
 
   /// Creates the database and initializes it.
-  Future<AppDatabase> build() async {
+  Future<MovieDatabase> build() async {
     final path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name)
         : ':memory:';
-    final database = _$AppDatabase();
+    final database = _$MovieDatabase();
     database.database = await database.open(
       path,
       _migrations,
@@ -55,8 +55,8 @@ class _$AppDatabaseBuilder {
   }
 }
 
-class _$AppDatabase extends AppDatabase {
-  _$AppDatabase([StreamController<String> listener]) {
+class _$MovieDatabase extends MovieDatabase {
+  _$MovieDatabase([StreamController<String> listener]) {
     changeListener = listener ?? StreamController<String>.broadcast();
   }
 

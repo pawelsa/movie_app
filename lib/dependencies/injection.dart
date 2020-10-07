@@ -2,18 +2,22 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movie_app/data/database/init/database.dart';
 import 'package:movie_app/dependencies/injection.config.dart';
+import 'package:movie_app/translations/translations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
 Future initDependencies() async {
+  // Intl.defaultLocale = 'en';
+  // strings = await Translations.load(Locale('en'));
   _database =
-      await $FloorAppDatabase.databaseBuilder('moves_database.db').build();
+      await $FloorMovieDatabase.databaseBuilder('moves_database.db').build();
   _sharedPreferences = await SharedPreferences.getInstance();
 }
 
-var _sharedPreferences;
-var _database;
+SharedPreferences _sharedPreferences;
+MovieDatabase _database;
+Translations strings;
 
 /// To run code generation use this command in terminal
 /// flutter pub run build_runner watch --delete-conflicting-outputs
