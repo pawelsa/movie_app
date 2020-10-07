@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:movie_app/dependencies/injection.dart';
+import 'package:movie_app/resources/strings.dart';
 import 'package:movie_app/screen/app/app_provider.dart';
 import 'package:movie_app/screen/app/translations_provider.dart';
 import 'package:movie_app/translations/translations.dart';
@@ -107,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(strings.text('app_name')),
+        title: Text(strings.text(Strings.appName)),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
