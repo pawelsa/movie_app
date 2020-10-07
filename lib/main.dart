@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:movie_app/dependencies/injection.dart';
+import 'package:movie_app/screen/app/app_provider.dart';
 import 'package:movie_app/translations/translations.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   configureInjection(Env.dev);
@@ -16,19 +18,19 @@ class PrepareApp extends StatefulWidget {
 class _PrepareAppState extends State<PrepareApp> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: initDependencies(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return MyApp();
-        } else {
-          return Center(
-            child: Container(
-              color: Colors.pink,
-            ),
-          );
-        }
-      },
+    return ChangeNotifierProvider.value(
+      value: getIt<AppProvider>(),
+      child: Consumer<AppProvider>(
+        builder: (context, appProvider, child) {
+          appProvider.init();
+          return appProvider.isInitialised ? MyApp() : child;
+        },
+        child: Center(
+          child: Container(
+            color: Colors.pink,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -63,7 +65,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
