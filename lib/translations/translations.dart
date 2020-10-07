@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:movie_app/dependencies/injection.dart';
+import 'package:movie_app/screen/app/translations_provider.dart';
 
 const List<String> languages = ['en', 'pl'];
 
@@ -26,7 +28,13 @@ class Translations {
     String jsonContent =
         await rootBundle.loadString("locale/i18n_${locale.languageCode}.json");
     _localizedValues = json.decode(jsonContent);
+    _updateLocaleInProvider(locale);
     return translations;
+  }
+
+  static void _updateLocaleInProvider(Locale locale) {
+    final translationsProvider = getIt<TranslationsProvider>();
+    translationsProvider.locale = locale;
   }
 }
 
