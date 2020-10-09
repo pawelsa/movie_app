@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movie_app/dependencies/injection.dart';
 
-@injectable
+@singleton
 class AppProvider extends ChangeNotifier {
   bool isInitialised = false;
 
