@@ -66,6 +66,9 @@ flutter:
     - family: ITCAvantGardeStd
       fonts:
         - asset: assets/font/ITCAvantGardeStdBk.otf
+    - family: Ethnocentric
+      fonts:
+        - asset: assets/font/ethnocentric.ttf
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

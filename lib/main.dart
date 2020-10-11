@@ -6,6 +6,7 @@ import 'package:movie_app/screen/app/app_provider.dart';
 import 'package:movie_app/screen/app/translations_provider.dart';
 import 'package:movie_app/screen/splash_screen/splash_screen_page.dart';
 import 'package:movie_app/translations/translations.dart';
+import 'package:movie_app/widgets/conditional.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,7 +27,11 @@ class _PrepareAppState extends State<PrepareApp> {
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
           appProvider.init();
-          return appProvider.isInitialised ? MyApp() : child;
+          return Conditional(
+            condition: appProvider.isInitialised,
+            ifBuilder: (context) => MyApp(),
+            elseBuilder: (context) => child,
+          );
         },
         child: SplashScreenPage(),
       ),
@@ -48,7 +53,6 @@ class MyApp extends StatelessWidget {
             children: <Widget>[
               MaterialApp(
                 title: 'Flutter Demo',
-                color: Colors.white,
                 localizationsDelegates: [
                   const TranslationsDelegate(),
                   GlobalMaterialLocalizations.delegate,
