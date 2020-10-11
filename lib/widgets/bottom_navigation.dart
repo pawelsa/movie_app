@@ -13,12 +13,14 @@ class BottomNavigation extends StatefulWidget {
   final Function(int) onPressed;
   final int currentIndex;
   final double iconSize;
+  final Color backgroundColor;
 
   const BottomNavigation({
     Key key,
     this.items,
     this.onPressed,
     this.currentIndex,
+    this.backgroundColor,
     double iconSize,
   })  : this.iconSize = iconSize ?? Dimen.iconSize,
         super(key: key);
@@ -65,14 +67,16 @@ class _BottomNavigationState extends State<BottomNavigation>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final minHeight =
-        Theme.of(context).bottomNavigationBarTheme.selectedIconTheme.size +
+        theme.bottomNavigationBarTheme.selectedIconTheme.size +
             Dimen.bottomNavigationBottomPadding +
             Dimen.bottomNavigationTopPadding;
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: minHeight),
       child: Container(
         decoration: BoxDecoration(
+          color: widget.backgroundColor ?? theme.backgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(Dimen.bottomNavigationCornerRadius),
             topRight: Radius.circular(Dimen.bottomNavigationCornerRadius),

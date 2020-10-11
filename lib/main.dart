@@ -61,20 +61,21 @@ class MyApp extends StatelessWidget {
                 ],
                 supportedLocales: const [Locale('pl'), Locale('en')],
                 theme: ThemeData(
-                    accentColor: AppColors.accentColor,
-                    unselectedWidgetColor: AppColors.unselectedColor,
+                    backgroundColor: AppColors.background,
+                    accentColor: AppColors.accent,
+                    unselectedWidgetColor: AppColors.unselected,
                     bottomNavigationBarTheme: BottomNavigationBarThemeData(
                         backgroundColor: Colors.white,
                         elevation: Dimen.bottomNavigationElevation,
-                        selectedItemColor: AppColors.selectedColor,
-                        unselectedItemColor: AppColors.unselectedColor,
+                        selectedItemColor: AppColors.selected,
+                        unselectedItemColor: AppColors.unselected,
                         selectedIconTheme: IconThemeData(
-                          color: AppColors.selectedColor,
+                          color: AppColors.selected,
                           opacity: 1.0,
                           size: Dimen.selectedBottomNavigationBarIconSize,
                         ),
                         unselectedIconTheme: IconThemeData(
-                          color: AppColors.unselectedColor,
+                          color: AppColors.unselected,
                           opacity: 0.7,
                           size: Dimen.iconSize,
                         )),
@@ -99,23 +100,65 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentPage = 0;
 
+  final List pages = [
+    Center(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+        child: Container(
+          width: 100,
+          height: 100,
+          color: Colors.orange,
+        ),
+      ),
+    ),
+    Center(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+        child: Container(
+          width: 100,
+          height: 100,
+          color: Colors.pink,
+        ),
+      ),
+    ),
+    Center(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+      ),
+    )
+  ];
+
   @override
   Widget build(BuildContext context) {
     strings = Translations.of(context);
     return Scaffold(
-      bottomNavigationBar: BottomNavigation(
-        onPressed: (index) {
-          if (index != _currentPage) {
-            setState(() {
-              _currentPage = index;
-            });
-          }
-        },
-        currentIndex: _currentPage,
-        items: [
-          BottomNavigationItemData(Icons.home),
-          BottomNavigationItemData(Icons.web),
-          BottomNavigationItemData(Icons.person)
+      body: Stack(
+        children: [
+          pages[_currentPage],
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: BottomNavigation(
+              onPressed: (index) {
+                if (index != _currentPage) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                }
+              },
+              currentIndex: _currentPage,
+              items: [
+                BottomNavigationItemData(Icons.home),
+                BottomNavigationItemData(Icons.web),
+                BottomNavigationItemData(Icons.person)
+              ],
+            ),
+          )
         ],
       ),
     );
