@@ -21,12 +21,10 @@ class PrepareApp extends StatefulWidget {
 class _PrepareAppState extends State<PrepareApp> {
   @override
   Widget build(BuildContext context) {
-    print('PrepareApp build');
     return ChangeNotifierProvider.value(
       value: getIt<AppProvider>(),
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
-          print('PrepareApp consumer build');
           appProvider.init();
           return appProvider.isInitialised ? MyApp() : child;
         },
@@ -40,36 +38,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print('MyApp build');
     return ChangeNotifierProvider.value(
       value: getIt<TranslationsProvider>(),
       child: Consumer<TranslationsProvider>(
         builder: (context, translationsProvider, child) {
-          print('MyApp translation build - ${translationsProvider.locale}');
-          return MaterialApp(
-            title: 'Flutter Demo',
-            color: Colors.white,
-            localizationsDelegates: [
-              const TranslationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate
+          return IndexedStack(
+            textDirection: TextDirection.ltr,
+            index: translationsProvider.locale == null ? 1 : 0,
+            children: <Widget>[
+              MaterialApp(
+                title: 'Flutter Demo',
+                color: Colors.white,
+                localizationsDelegates: [
+                  const TranslationsDelegate(),
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate
+                ],
+                supportedLocales: const [Locale('pl'), Locale('en')],
+                theme: ThemeData(
+                    // This is the theme of your application.
+                    //
+                    // Try running your application with "flutter run". You'll see the
+                    // application has a blue toolbar. Then, without quitting the app, try
+                    // changing the primarySwatch below to Colors.green and then invoke
+                    // "hot reload" (press "r" in the console where you ran "flutter run",
+                    // or simply save your changes to "hot reload" in a Flutter IDE).
+                    // Notice that the counter didn't reset back to zero; the application
+                    // is not restarted.
+                    primarySwatch: Colors.blue,
+                    fontFamily: 'ITCAvantGardeStd'),
+                home: MyHomePage(),
+              ),
+              if (translationsProvider.locale == null) SplashScreenPage(),
             ],
-            supportedLocales: const [Locale('pl'), Locale('en')],
-            theme: ThemeData(
-                // This is the theme of your application.
-                //
-                // Try running your application with "flutter run". You'll see the
-                // application has a blue toolbar. Then, without quitting the app, try
-                // changing the primarySwatch below to Colors.green and then invoke
-                // "hot reload" (press "r" in the console where you ran "flutter run",
-                // or simply save your changes to "hot reload" in a Flutter IDE).
-                // Notice that the counter didn't reset back to zero; the application
-                // is not restarted.
-                primarySwatch: Colors.blue,
-                fontFamily: 'ITCAvantGardeStd'),
-            home: translationsProvider.locale != null
-                ? MyHomePage()
-                : SplashScreenPage(),
           );
         },
       ),
@@ -102,7 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('MyHomePage build');
     strings = Translations.of(context);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.

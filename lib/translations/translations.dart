@@ -24,18 +24,11 @@ class Translations {
   }
 
   static Future<Translations> load(Locale locale) async {
-    print('Translations $locale');
     Translations translations = Translations(locale);
     String jsonContent =
         await rootBundle.loadString("locale/i18n_${locale.languageCode}.json");
     _localizedValues = json.decode(jsonContent);
-    _updateLocaleInProvider(locale);
     return translations;
-  }
-
-  static void _updateLocaleInProvider(Locale locale) {
-    final translationsProvider = getIt<TranslationsProvider>();
-    translationsProvider.locale = locale;
   }
 }
 
@@ -46,7 +39,16 @@ class TranslationsDelegate extends LocalizationsDelegate<Translations> {
   bool shouldReload(LocalizationsDelegate<Translations> old) => false;
 
   @override
-  Future<Translations> load(Locale locale) => Translations.load(locale);
+  Future<Translations> load(Locale locale) =>
+      Translations.load(locale).then((translations) {
+        _updateLocaleInProvider(translations.locale);
+        return translations;
+      });
+
+  static void _updateLocaleInProvider(Locale locale) {
+    final translationsProvider = getIt<TranslationsProvider>();
+    translationsProvider.locale = locale;
+  }
 
   @override
   bool isSupported(Locale locale) => languages.contains(locale.languageCode);
