@@ -21,10 +21,12 @@ class PrepareApp extends StatefulWidget {
 class _PrepareAppState extends State<PrepareApp> {
   @override
   Widget build(BuildContext context) {
+    print('PrepareApp build');
     return ChangeNotifierProvider.value(
       value: getIt<AppProvider>(),
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
+          print('PrepareApp consumer build');
           appProvider.init();
           return appProvider.isInitialised ? MyApp() : child;
         },
@@ -38,10 +40,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print('MyApp build');
     return ChangeNotifierProvider.value(
       value: getIt<TranslationsProvider>(),
       child: Consumer<TranslationsProvider>(
         builder: (context, translationsProvider, child) {
+          print('MyApp translation build - ${translationsProvider.locale}');
           return MaterialApp(
             title: 'Flutter Demo',
             color: Colors.white,
@@ -98,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('MyHomePage build');
     strings = Translations.of(context);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
