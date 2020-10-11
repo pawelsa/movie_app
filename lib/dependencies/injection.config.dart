@@ -19,7 +19,9 @@ GetIt $initGetIt(
   EnvironmentFilter environmentFilter,
 }) {
   final gh = GetItHelper(get, environment, environmentFilter);
-  gh.factory<AppProvider>(() => AppProvider());
-  gh.factory<TranslationsProvider>(() => TranslationsProvider());
+
+  // Eager singletons must be registered in the right order
+  gh.singleton<AppProvider>(AppProvider());
+  gh.singleton<TranslationsProvider>(TranslationsProvider());
   return get;
 }

@@ -4,7 +4,9 @@ import 'package:movie_app/dependencies/injection.dart';
 import 'package:movie_app/resources/strings.dart';
 import 'package:movie_app/screen/app/app_provider.dart';
 import 'package:movie_app/screen/app/translations_provider.dart';
+import 'package:movie_app/screen/splash_screen/splash_screen_page.dart';
 import 'package:movie_app/translations/translations.dart';
+import 'package:movie_app/widgets/conditional.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,13 +27,13 @@ class _PrepareAppState extends State<PrepareApp> {
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
           appProvider.init();
-          return appProvider.isInitialised ? MyApp() : child;
+          return Conditional(
+            condition: appProvider.isInitialised,
+            ifBuilder: (context) => MyApp(),
+            elseBuilder: (context) => child,
+          );
         },
-        child: Center(
-          child: Container(
-            color: Colors.pink,
-          ),
-        ),
+        child: SplashScreenPage(),
       ),
     );
   }
@@ -44,29 +46,37 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: getIt<TranslationsProvider>(),
       child: Consumer<TranslationsProvider>(
-        builder: (context, translationsProvider, child) => MaterialApp(
-          title: 'Flutter Demo',
-          locale: translationsProvider.locale,
-          localizationsDelegates: [
-            const TranslationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate
-          ],
-          supportedLocales: const [Locale('pl'), Locale('en')],
-          theme: ThemeData(
-            // This is the theme of your application.
-            //
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or simply save your changes to "hot reload" in a Flutter IDE).
-            // Notice that the counter didn't reset back to zero; the application
-            // is not restarted.
-            primarySwatch: Colors.blue,
-          ),
-          home: MyHomePage(),
-        ),
+        builder: (context, translationsProvider, child) {
+          return IndexedStack(
+            textDirection: TextDirection.ltr,
+            index: translationsProvider.locale == null ? 1 : 0,
+            children: <Widget>[
+              MaterialApp(
+                title: 'Flutter Demo',
+                localizationsDelegates: [
+                  const TranslationsDelegate(),
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate
+                ],
+                supportedLocales: const [Locale('pl'), Locale('en')],
+                theme: ThemeData(
+                    // This is the theme of your application.
+                    //
+                    // Try running your application with "flutter run". You'll see the
+                    // application has a blue toolbar. Then, without quitting the app, try
+                    // changing the primarySwatch below to Colors.green and then invoke
+                    // "hot reload" (press "r" in the console where you ran "flutter run",
+                    // or simply save your changes to "hot reload" in a Flutter IDE).
+                    // Notice that the counter didn't reset back to zero; the application
+                    // is not restarted.
+                    primarySwatch: Colors.blue,
+                    fontFamily: 'ITCAvantGardeStd'),
+                home: MyHomePage(),
+              ),
+              if (translationsProvider.locale == null) SplashScreenPage(),
+            ],
+          );
+        },
       ),
     );
   }
