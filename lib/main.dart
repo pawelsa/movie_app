@@ -7,7 +7,8 @@ import 'package:movie_app/screen/app/app_provider.dart';
 import 'package:movie_app/screen/app/translations_provider.dart';
 import 'package:movie_app/screen/splash_screen/splash_screen_page.dart';
 import 'package:movie_app/translations/translations.dart';
-import 'package:movie_app/widgets/bottom_navigation.dart';
+import 'package:movie_app/widgets/bottom_navigation/bottom_navigation.dart';
+import 'package:movie_app/widgets/bottom_navigation/bottom_navigation_provider.dart';
 import 'package:movie_app/widgets/conditional.dart';
 import 'package:provider/provider.dart';
 
@@ -98,8 +99,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentPage = 0;
-
   final List pages = [
     Center(
       child: Container(
@@ -130,6 +129,19 @@ class _MyHomePageState extends State<MyHomePage> {
         decoration: BoxDecoration(
           gradient: AppColors.backgroundGradient,
         ),
+        child: Container(
+          width: 300,
+          height: 100,
+          child: MaterialButton(
+            onPressed: () {
+              final bottomNavigationProvider =
+                  getIt<BottomNavigationProvider>();
+              bottomNavigationProvider.isVisible =
+                  !bottomNavigationProvider.isVisible;
+            },
+            child: Text("Press me to hide/show bottom navigation bar"),
+          ),
+        ),
       ),
     )
   ];
@@ -138,28 +150,28 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     strings = Translations.of(context);
     return Scaffold(
-      body: Stack(
-        children: [
-          pages[_currentPage],
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: BottomNavigation(
-              onPressed: (index) {
-                if (index != _currentPage) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                }
-              },
-              currentIndex: _currentPage,
-              items: [
-                BottomNavigationItemData(Icons.home),
-                BottomNavigationItemData(Icons.web),
-                BottomNavigationItemData(Icons.person)
-              ],
-            ),
-          )
-        ],
+      body: ChangeNotifierProvider.value(
+        value: getIt<BottomNavigationProvider>(),
+        child: Consumer<BottomNavigationProvider>(
+            builder: (_, bottomNavigationProvider, child) {
+              return Stack(
+                children: [
+                  pages[bottomNavigationProvider.currentlySelected],
+                  child,
+                ],
+              );
+            },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: BottomNavigation(
+                startIndex: getIt<BottomNavigationProvider>().currentlySelected,
+                items: [
+                  BottomNavigationItemData(Icons.home),
+                  BottomNavigationItemData(Icons.web),
+                  BottomNavigationItemData(Icons.person)
+                ],
+              ),
+            )),
       ),
     );
   }
